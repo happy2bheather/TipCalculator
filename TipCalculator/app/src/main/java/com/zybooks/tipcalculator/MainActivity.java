@@ -14,6 +14,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText percentEditText;
     private TextView tipTextView;
     private TextView totalTextView;
+    private TipCalculatorModel model = new TipCalculatorModel();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,20 +39,15 @@ public class MainActivity extends AppCompatActivity {
         try {
 
             // Convert the texts into floats
-            Float billAmt = Float.parseFloat(billStr);
-            Float percentAmt = Float.parseFloat(percentStr);
-            percentAmt/=100;
-
-            //determine the tip given the bill and the percentage
-            Float tipAmt = billAmt * percentAmt;
-
-            //determine the total
-            Float totalAmt = billAmt + tipAmt;
+            //Float bill=Float.parseFloat(billStr);
+            model.setBill(Float.parseFloat(billStr));
+            //Float percent=Float.parseFloat(percentStr);
+            model.setPercentage(Float.parseFloat(percentStr));
 
             //convert floats into money formatted strings
             NumberFormat moneyFormat = NumberFormat.getCurrencyInstance();
-            String tipAmtStr = moneyFormat.format(tipAmt);
-            String totalAmtStr = moneyFormat.format(totalAmt);
+            String tipAmtStr = moneyFormat.format(model.getTip());
+            String totalAmtStr = moneyFormat.format(model.getTotal());
 
             //display the results
             tipTextView.setText(tipAmtStr);
@@ -61,13 +57,13 @@ public class MainActivity extends AppCompatActivity {
         catch(NumberFormatException e){
 
             //Display a toast message when the exception is thrown.
-            Toast.makeText(this, "Please enter numbers for bill and tip percent.",
-                    Toast.LENGTH_SHORT).show();
+            String errorMsg = getResources().getString(R.string.error);
+            Toast.makeText(this, errorMsg, Toast.LENGTH_SHORT).show();
+
             //clear out the tip amount and total values if the 
             //exception is thrown.
             tipTextView.setText("");
             totalTextView.setText("");
-
         }
     }
 }
